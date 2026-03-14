@@ -7,7 +7,7 @@ name = "secsgem-driver"
 version = "1.0.0"
 description = "Configuration-driven SECS/GEM driver for semiconductor equipment communication"
 readme = "README.md"
-license = {text = "Apache-2.0"}
+license = "Apache-2.0"
 requires-python = ">=3.9"
 authors = [
     {name = "MST Semiconductor Technology", email = "info@ai-mst.com"},
@@ -22,7 +22,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Manufacturing",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: Apache Software License",
+
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",

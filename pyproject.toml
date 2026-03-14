@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "secsgem-driver"
+version = "1.0.0"
+description = "Configuration-driven SECS/GEM driver for semiconductor equipment communication"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.9"
+authors = [
+    {name = "MST Semiconductor Technology", email = "info@ai-mst.com"},
+]
+keywords = [
+    "secs", "gem", "hsms", "semiconductor", "equipment",
+    "semi", "e5", "e30", "e37", "automation",
+    "manufacturing", "fab", "mes", "industry4.0",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Manufacturing",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Hardware :: Hardware Drivers",
+]
+dependencies = [
+    "pyyaml>=6.0",
+    "pydantic>=2.0",
+]
+
+[project.urls]
+Homepage = "https://ai-mst.com"
+Documentation = "https://github.com/shensi8312/secsgem-driver"
+Repository = "https://github.com/shensi8312/secsgem-driver"
+Issues = "https://github.com/shensi8312/secsgem-driver/issues"
+"NeuroBox AI Platform" = "https://ai-mst.com/neurobox-e3200"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "ruff>=0.1.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py39"
+line-length = 100

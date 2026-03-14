@@ -1,0 +1,391 @@
+# ========================================================================
+# Universal SECS/GEM Equipment Configuration Template
+# ========================================================================
+# This template provides a complete configuration structure for SECS/GEM
+# equipment communication. Copy this file and customize for each equipment.
+# ========================================================================
+
+# ------------------------------------------------------------------------
+# Equipment Information
+# ------------------------------------------------------------------------
+equipment:
+  # Equipment identifier (used in logs and system identification)
+  id: "EQUIPMENT_001"
+
+  # Equipment type/model (e.g., AMAT_CENTURA, LAM_KIYO, TEL_LITHIUS)
+  type: "GENERIC_TOOL"
+
+  # Equipment description
+  description: "Generic Semiconductor Equipment"
+
+  # Equipment location/bay identifier
+  location: "FAB1-BAY-01"
+
+  # Vendor name
+  vendor: "VENDOR_NAME"
+
+# ------------------------------------------------------------------------
+# HSMS Connection Parameters (SEMI E37)
+# ------------------------------------------------------------------------
+connection:
+  # Connection mode: 'active' or 'passive'
+  # - active: Driver initiates connection to equipment
+  # - passive: Driver listens for equipment connection
+  mode: "active"
+
+  # Equipment IP address
+  ip_address: "192.168.1.100"
+
+  # HSMS port (default: 5000)
+  port: 5000
+
+  # Connection timeout (seconds)
+  connect_timeout: 30
+
+  # Reply timeout for messages (seconds)
+  reply_timeout: 10
+
+  # T3 timeout - Inter-character timeout (seconds)
+  t3_timeout: 120
+
+  # T5 timeout - Connect separation timeout (seconds)
+  t5_timeout: 10
+
+  # T6 timeout - Control transaction timeout (seconds)
+  t6_timeout: 5
+
+  # T7 timeout - Not selected timeout (seconds)
+  t7_timeout: 10
+
+  # T8 timeout - Network inter-character timeout (seconds)
+  t8_timeout: 5
+
+  # Device ID for HSMS protocol
+  device_id: 0
+
+  # Session ID
+  session_id: 0
+
+# ------------------------------------------------------------------------
+# SECS-II Message Definitions
+# ------------------------------------------------------------------------
+messages:
+  # S1F1 - Are You There Request
+  S1F1:
+    stream: 1
+    function: 1
+    wait_bit: true
+    description: "Are You There Request"
+    structure: null  # No data items
+
+  # S1F2 - Are You There Response
+  S1F2:
+    stream: 1
+    function: 2
+    wait_bit: false
+    description: "Are You There Response"
+    structure:
+      - name: "MDLN"
+        type: "ASCII"
+        description: "Model Name"
+        max_length: 20
+      - name: "SOFTREV"
+        type: "ASCII"
+        description: "Software Revision"
+        max_length: 20
+
+  # S1F3 - Selected Equipment Status Request
+  S1F3:
+    stream: 1
+    function: 3
+    wait_bit: true
+    description: "Selected Equipment Status Request"
+    structure:
+      - name: "SVID"
+        type: "LIST"
+        description: "List of Status Variable IDs"
+        items:
+          type: "U4"
+
+  # S1F4 - Selected Equipment Status Data
+  S1F4:
+    stream: 1
+    function: 4
+    wait_bit: false
+    description: "Selected Equipment Status Response"
+    structure:
+      - name: "SV"
+        type: "LIST"
+        description: "List of Status Variable values"
+
+  # S1F13 - Establish Communications Request
+  S1F13:
+    stream: 1
+    function: 13
+    wait_bit: true
+    description: "Establish Communications Request"
+    structure: null
+
+  # S1F14 - Establish Communications Acknowledge
+  S1F14:
+    stream: 1
+    function: 14
+    wait_bit: false
+    description: "Establish Communications Acknowledge"
+    structure:
+      - name: "COMMACK"
+        type: "BINARY"
+        description: "Establish Communications Acknowledge Code"
+        length: 1
+      - name: "MDLN"
+        type: "LIST"
+        description: "Equipment Model and Software Data"
+
+  # S2F41 - Host Command Send
+  S2F41:
+    stream: 2
+    function: 41
+    wait_bit: true
+    description: "Remote Command Request"
+    structure:
+      - name: "RCMD"
+        type: "ASCII"
+        description: "Remote Command"
+      - name: "PARAMS"
+        type: "LIST"
+        description: "Command Parameters"
+
+  # S2F42 - Host Command Acknowledge
+  S2F42:
+    stream: 2
+    function: 42
+    wait_bit: false
+    description: "Remote Command Acknowledge"
+    structure:
+      - name: "HCACK"
+        type: "BINARY"
+        description: "Host Command Acknowledge Code"
+        length: 1
+      - name: "PARAMS"
+        type: "LIST"
+        description: "Return Parameters"
+
+  # S6F11 - Equipment Status Event Report
+  S6F11:
+    stream: 6
+    function: 11
+    wait_bit: false
+    description: "Event Report"
+    structure:
+      - name: "DATAID"
+        type: "U4"
+        description: "Data ID"
+      - name: "CEID"
+        type: "U4"
+        description: "Collection Event ID"
+      - name: "RPT"
+        type: "LIST"
+        description: "Reports"
+
+  # S6F12 - Event Report Acknowledge
+  S6F12:
+    stream: 6
+    function: 12
+    wait_bit: false
+    description: "Event Report Acknowledge"
+    structure:
+      - name: "ACKC6"
+        type: "BINARY"
+        description: "Acknowledge Code"
+        length: 1
+
+# ------------------------------------------------------------------------
+# Data Variables (Status Variables - SV)
+# ------------------------------------------------------------------------
+data_variables:
+  # Clock (Equipment Time)
+  1:
+    name: "CLOCK"
+    type: "ASCII"
+    description: "Equipment clock time"
+    unit: "timestamp"
+
+  # Control State
+  2:
+    name: "CONTROL_STATE"
+    type: "U1"
+    description: "Equipment control state (1=Online Local, 2=Online Remote, 3=Offline)"
+    unit: "enum"
+    values:
+      1: "ONLINE_LOCAL"
+      2: "ONLINE_REMOTE"
+      3: "OFFLINE"
+
+  # Processing State
+  3:
+    name: "PROCESSING_STATE"
+    type: "U1"
+    description: "Processing state (1=Idle, 2=Setup, 3=Executing, 4=Paused)"
+    unit: "enum"
+    values:
+      1: "IDLE"
+      2: "SETUP"
+      3: "EXECUTING"
+      4: "PAUSED"
+
+  # Chamber Pressure
+  100:
+    name: "CHAMBER_PRESSURE"
+    type: "F4"
+    description: "Process chamber pressure"
+    unit: "mTorr"
+    min: 0.0
+    max: 100.0
+
+  # Chamber Temperature
+  101:
+    name: "CHAMBER_TEMP"
+    type: "F4"
+    description: "Chamber temperature"
+    unit: "Celsius"
+    min: 0.0
+    max: 500.0
+
+  # RF Power
+  102:
+    name: "RF_POWER"
+    type: "F4"
+    description: "RF power level"
+    unit: "Watts"
+    min: 0.0
+    max: 5000.0
+
+# ------------------------------------------------------------------------
+# Collection Events (CEID)
+# ------------------------------------------------------------------------
+collection_events:
+  # Equipment Status Change
+  1:
+    name: "EQUIPMENT_STATUS_CHANGE"
+    description: "Equipment status changed"
+    associated_reports: [1, 2]
+
+  # Process Start
+  100:
+    name: "PROCESS_START"
+    description: "Process execution started"
+    associated_reports: [10, 11]
+
+  # Process Complete
+  101:
+    name: "PROCESS_COMPLETE"
+    description: "Process execution completed"
+    associated_reports: [10, 11, 12]
+
+  # Alarm Triggered
+  200:
+    name: "ALARM_TRIGGERED"
+    description: "Alarm condition detected"
+    associated_reports: [20, 21]
+
+# ------------------------------------------------------------------------
+# Reports Configuration
+# ------------------------------------------------------------------------
+reports:
+  # Equipment Status Report
+  1:
+    name: "EQUIPMENT_STATUS"
+    description: "Equipment status data"
+    variables: [1, 2, 3]
+
+  # Process Parameters Report
+  10:
+    name: "PROCESS_PARAMETERS"
+    description: "Current process parameters"
+    variables: [100, 101, 102]
+
+  # Alarm Report
+  20:
+    name: "ALARM_REPORT"
+    description: "Alarm information"
+    variables: [1, 2]
+
+# ------------------------------------------------------------------------
+# Commands (Remote Commands)
+# ------------------------------------------------------------------------
+commands:
+  # Start Processing
+  START:
+    description: "Start process execution"
+    parameters:
+      - name: "RECIPE_ID"
+        type: "ASCII"
+        required: true
+      - name: "LOT_ID"
+        type: "ASCII"
+        required: true
+
+  # Stop Processing
+  STOP:
+    description: "Stop process execution"
+    parameters: []
+
+  # Pause Processing
+  PAUSE:
+    description: "Pause current process"
+    parameters: []
+
+  # Resume Processing
+  RESUME:
+    description: "Resume paused process"
+    parameters: []
+
+# ------------------------------------------------------------------------
+# Driver Behavior Settings
+# ------------------------------------------------------------------------
+settings:
+  # Enable automatic reconnection on disconnect
+  auto_reconnect: true
+
+  # Reconnection interval (seconds)
+  reconnect_interval: 30
+
+  # Maximum reconnection attempts (0 = infinite)
+  max_reconnect_attempts: 0
+
+  # Enable heartbeat (S1F1/F2) mechanism
+  heartbeat_enabled: true
+
+  # Heartbeat interval (seconds)
+  heartbeat_interval: 60
+
+  # Enable message logging
+  message_logging: true
+
+  # Log file path (relative to project root)
+  log_file: "logs/equipment.log"
+
+  # Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+  log_level: "INFO"
+
+  # Enable SECS message tracing
+  secs_trace: true
+
+# ------------------------------------------------------------------------
+# Advanced Settings
+# ------------------------------------------------------------------------
+advanced:
+  # Maximum message queue size
+  max_queue_size: 1000
+
+  # Enable message caching
+  message_cache_enabled: true
+
+  # Message cache TTL (seconds)
+  message_cache_ttl: 300
+
+  # Enable performance metrics
+  metrics_enabled: true
+
+  # Metrics export interval (seconds)
+  metrics_interval: 60

@@ -1,0 +1,431 @@
+# ========================================================================
+# Tokyo Electron (TEL) Lithius Equipment Configuration
+# ========================================================================
+# TEL Lithius - Coater/Developer System for Photolithography
+# ========================================================================
+
+equipment:
+  id: "LITHIUS_001"
+  type: "TEL_LITHIUS"
+  description: "TEL Lithius Coater/Developer System"
+  location: "FAB1-BAY-C03"
+  vendor: "Tokyo Electron"
+
+connection:
+  mode: "active"
+  ip_address: "192.168.10.103"
+  port: 5000
+  connect_timeout: 30
+  reply_timeout: 10
+  t3_timeout: 120
+  t5_timeout: 10
+  t6_timeout: 5
+  t7_timeout: 10
+  t8_timeout: 5
+  device_id: 0
+  session_id: 0
+
+messages:
+  S1F1:
+    stream: 1
+    function: 1
+    wait_bit: true
+    description: "Are You There Request"
+    structure: null
+
+  S1F2:
+    stream: 1
+    function: 2
+    wait_bit: false
+    description: "Are You There Response"
+    structure:
+      - name: "MDLN"
+        type: "ASCII"
+        description: "Model Name"
+        max_length: 20
+      - name: "SOFTREV"
+        type: "ASCII"
+        description: "Software Revision"
+        max_length: 20
+
+  S1F13:
+    stream: 1
+    function: 13
+    wait_bit: true
+    description: "Establish Communications Request"
+    structure: null
+
+  S1F14:
+    stream: 1
+    function: 14
+    wait_bit: false
+    description: "Establish Communications Acknowledge"
+    structure:
+      - name: "COMMACK"
+        type: "BINARY"
+        description: "Establish Communications Acknowledge Code"
+        length: 1
+      - name: "MDLN"
+        type: "LIST"
+        description: "Equipment Model and Software Data"
+
+  S2F41:
+    stream: 2
+    function: 41
+    wait_bit: true
+    description: "Remote Command Request"
+    structure:
+      - name: "RCMD"
+        type: "ASCII"
+        description: "Remote Command"
+      - name: "PARAMS"
+        type: "LIST"
+        description: "Command Parameters"
+
+  S2F42:
+    stream: 2
+    function: 42
+    wait_bit: false
+    description: "Remote Command Acknowledge"
+    structure:
+      - name: "HCACK"
+        type: "BINARY"
+        description: "Host Command Acknowledge Code"
+        length: 1
+
+  S6F11:
+    stream: 6
+    function: 11
+    wait_bit: false
+    description: "Event Report"
+    structure:
+      - name: "DATAID"
+        type: "U4"
+        description: "Data ID"
+      - name: "CEID"
+        type: "U4"
+        description: "Collection Event ID"
+      - name: "RPT"
+        type: "LIST"
+        description: "Reports"
+
+  S6F12:
+    stream: 6
+    function: 12
+    wait_bit: false
+    description: "Event Report Acknowledge"
+    structure:
+      - name: "ACKC6"
+        type: "BINARY"
+        description: "Acknowledge Code"
+        length: 1
+
+data_variables:
+  1:
+    name: "CLOCK"
+    type: "ASCII"
+    description: "Equipment clock time"
+    unit: "timestamp"
+
+  2:
+    name: "CONTROL_STATE"
+    type: "U1"
+    description: "Equipment control state"
+    unit: "enum"
+    values:
+      1: "ONLINE_LOCAL"
+      2: "ONLINE_REMOTE"
+      3: "OFFLINE"
+
+  3:
+    name: "PROCESSING_STATE"
+    type: "U1"
+    description: "Processing state"
+    unit: "enum"
+    values:
+      1: "IDLE"
+      2: "SETUP"
+      3: "EXECUTING"
+      4: "PAUSED"
+
+  # Lithography-specific process parameters
+  100:
+    name: "SPIN_SPEED"
+    type: "F4"
+    description: "Spin coating speed"
+    unit: "RPM"
+    min: 0.0
+    max: 8000.0
+
+  101:
+    name: "BAKE_TEMP"
+    type: "F4"
+    description: "Soft/hard bake temperature"
+    unit: "Celsius"
+    min: 20.0
+    max: 250.0
+
+  102:
+    name: "BAKE_TIME"
+    type: "F4"
+    description: "Bake duration"
+    unit: "seconds"
+    min: 0.0
+    max: 600.0
+
+  103:
+    name: "RESIST_DISPENSE_TIME"
+    type: "F4"
+    description: "Resist dispense time"
+    unit: "seconds"
+    min: 0.0
+    max: 10.0
+
+  104:
+    name: "RESIST_VOLUME"
+    type: "F4"
+    description: "Resist volume dispensed"
+    unit: "mL"
+    min: 0.0
+    max: 10.0
+
+  105:
+    name: "DEVELOPER_TIME"
+    type: "F4"
+    description: "Development time"
+    unit: "seconds"
+    min: 0.0
+    max: 300.0
+
+  106:
+    name: "HOTPLATE_TEMP"
+    type: "F4"
+    description: "Hotplate temperature"
+    unit: "Celsius"
+    min: 20.0
+    max: 300.0
+
+  107:
+    name: "CHILL_PLATE_TEMP"
+    type: "F4"
+    description: "Chill plate temperature"
+    unit: "Celsius"
+    min: 10.0
+    max: 30.0
+
+  108:
+    name: "HUMIDITY"
+    type: "F4"
+    description: "Environment humidity"
+    unit: "%RH"
+    min: 0.0
+    max: 100.0
+
+  109:
+    name: "FILM_THICKNESS"
+    type: "F4"
+    description: "Resist film thickness"
+    unit: "Angstroms"
+    min: 0.0
+    max: 50000.0
+
+collection_events:
+  1:
+    name: "EQUIPMENT_STATUS_CHANGE"
+    description: "Equipment status changed"
+    associated_reports: [1, 2]
+
+  100:
+    name: "COAT_START"
+    description: "Coating process started"
+    associated_reports: [10, 11]
+
+  101:
+    name: "COAT_COMPLETE"
+    description: "Coating process completed"
+    associated_reports: [10, 11, 12]
+
+  102:
+    name: "DEVELOP_START"
+    description: "Development process started"
+    associated_reports: [10, 13]
+
+  103:
+    name: "DEVELOP_COMPLETE"
+    description: "Development process completed"
+    associated_reports: [10, 13, 14]
+
+  104:
+    name: "BAKE_START"
+    description: "Bake process started"
+    associated_reports: [10, 15]
+
+  105:
+    name: "BAKE_COMPLETE"
+    description: "Bake process completed"
+    associated_reports: [10, 15]
+
+  106:
+    name: "WAFER_LOAD"
+    description: "Wafer loaded"
+    associated_reports: [1, 10]
+
+  107:
+    name: "WAFER_UNLOAD"
+    description: "Wafer unloaded"
+    associated_reports: [1, 10]
+
+  200:
+    name: "ALARM_TRIGGERED"
+    description: "Alarm condition detected"
+    associated_reports: [20, 21]
+
+  201:
+    name: "TEMPERATURE_ALARM"
+    description: "Temperature out of spec"
+    associated_reports: [20, 21]
+
+  202:
+    name: "HUMIDITY_ALARM"
+    description: "Humidity out of spec"
+    associated_reports: [20, 21]
+
+  203:
+    name: "DISPENSE_ERROR"
+    description: "Resist/developer dispense error"
+    associated_reports: [20, 21]
+
+reports:
+  1:
+    name: "EQUIPMENT_STATUS"
+    description: "Equipment status data"
+    variables: [1, 2, 3]
+
+  10:
+    name: "PROCESS_PARAMETERS"
+    description: "Current process parameters"
+    variables: [100, 101, 102, 106, 107, 108]
+
+  11:
+    name: "COAT_DATA"
+    description: "Coating process data"
+    variables: [100, 103, 104, 109]
+
+  12:
+    name: "COAT_QUALITY"
+    description: "Coating quality measurements"
+    variables: [109]
+
+  13:
+    name: "DEVELOP_DATA"
+    description: "Development process data"
+    variables: [105]
+
+  14:
+    name: "DEVELOP_QUALITY"
+    description: "Development quality data"
+    variables: [105]
+
+  15:
+    name: "BAKE_DATA"
+    description: "Bake process data"
+    variables: [101, 102, 106]
+
+  20:
+    name: "ALARM_REPORT"
+    description: "Alarm information"
+    variables: [1, 2]
+
+  21:
+    name: "ALARM_DETAILS"
+    description: "Detailed alarm data"
+    variables: [101, 106, 107, 108]
+
+commands:
+  START_COAT:
+    description: "Start coating process"
+    parameters:
+      - name: "RECIPE_ID"
+        type: "ASCII"
+        required: true
+      - name: "LOT_ID"
+        type: "ASCII"
+        required: true
+      - name: "WAFER_ID"
+        type: "ASCII"
+        required: true
+
+  START_DEVELOP:
+    description: "Start development process"
+    parameters:
+      - name: "RECIPE_ID"
+        type: "ASCII"
+        required: true
+      - name: "LOT_ID"
+        type: "ASCII"
+        required: true
+      - name: "WAFER_ID"
+        type: "ASCII"
+        required: true
+
+  START_BAKE:
+    description: "Start bake process"
+    parameters:
+      - name: "BAKE_TYPE"
+        type: "ASCII"
+        required: true
+        # Values: "SOFT_BAKE", "HARD_BAKE", "POST_EXPOSE_BAKE"
+      - name: "RECIPE_ID"
+        type: "ASCII"
+        required: true
+
+  STOP_PROCESS:
+    description: "Stop current process"
+    parameters: []
+
+  PAUSE_PROCESS:
+    description: "Pause current process"
+    parameters: []
+
+  RESUME_PROCESS:
+    description: "Resume paused process"
+    parameters: []
+
+  PRIME_RESIST:
+    description: "Prime resist dispense system"
+    parameters:
+      - name: "RESIST_TYPE"
+        type: "ASCII"
+        required: true
+
+  PRIME_DEVELOPER:
+    description: "Prime developer dispense system"
+    parameters:
+      - name: "DEVELOPER_TYPE"
+        type: "ASCII"
+        required: true
+
+  ABORT_PROCESS:
+    description: "Abort current process"
+    parameters:
+      - name: "ABORT_CODE"
+        type: "U1"
+        required: false
+
+settings:
+  auto_reconnect: true
+  reconnect_interval: 30
+  max_reconnect_attempts: 0
+  heartbeat_enabled: true
+  heartbeat_interval: 60
+  message_logging: true
+  log_file: "logs/tel_lithius.log"
+  log_level: "INFO"
+  secs_trace: true
+
+advanced:
+  max_queue_size: 1000
+  message_cache_enabled: true
+  message_cache_ttl: 300
+  metrics_enabled: true
+  metrics_interval: 60

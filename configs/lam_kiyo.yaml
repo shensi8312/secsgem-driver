@@ -1,0 +1,369 @@
+# ========================================================================
+# Lam Research Kiyo Equipment Configuration
+# ========================================================================
+# Lam Research Kiyo - Plasma Etch System
+# ========================================================================
+
+equipment:
+  id: "KIYO_001"
+  type: "LAM_KIYO"
+  description: "Lam Research Kiyo Etch System"
+  location: "FAB1-BAY-B02"
+  vendor: "Lam Research"
+
+connection:
+  mode: "active"
+  ip_address: "192.168.10.102"
+  port: 5000
+  connect_timeout: 30
+  reply_timeout: 10
+  t3_timeout: 120
+  t5_timeout: 10
+  t6_timeout: 5
+  t7_timeout: 10
+  t8_timeout: 5
+  device_id: 0
+  session_id: 0
+
+messages:
+  S1F1:
+    stream: 1
+    function: 1
+    wait_bit: true
+    description: "Are You There Request"
+    structure: null
+
+  S1F2:
+    stream: 1
+    function: 2
+    wait_bit: false
+    description: "Are You There Response"
+    structure:
+      - name: "MDLN"
+        type: "ASCII"
+        description: "Model Name"
+        max_length: 20
+      - name: "SOFTREV"
+        type: "ASCII"
+        description: "Software Revision"
+        max_length: 20
+
+  S1F13:
+    stream: 1
+    function: 13
+    wait_bit: true
+    description: "Establish Communications Request"
+    structure: null
+
+  S1F14:
+    stream: 1
+    function: 14
+    wait_bit: false
+    description: "Establish Communications Acknowledge"
+    structure:
+      - name: "COMMACK"
+        type: "BINARY"
+        description: "Establish Communications Acknowledge Code"
+        length: 1
+      - name: "MDLN"
+        type: "LIST"
+        description: "Equipment Model and Software Data"
+
+  S2F41:
+    stream: 2
+    function: 41
+    wait_bit: true
+    description: "Remote Command Request"
+    structure:
+      - name: "RCMD"
+        type: "ASCII"
+        description: "Remote Command"
+      - name: "PARAMS"
+        type: "LIST"
+        description: "Command Parameters"
+
+  S2F42:
+    stream: 2
+    function: 42
+    wait_bit: false
+    description: "Remote Command Acknowledge"
+    structure:
+      - name: "HCACK"
+        type: "BINARY"
+        description: "Host Command Acknowledge Code"
+        length: 1
+
+  S6F11:
+    stream: 6
+    function: 11
+    wait_bit: false
+    description: "Event Report"
+    structure:
+      - name: "DATAID"
+        type: "U4"
+        description: "Data ID"
+      - name: "CEID"
+        type: "U4"
+        description: "Collection Event ID"
+      - name: "RPT"
+        type: "LIST"
+        description: "Reports"
+
+  S6F12:
+    stream: 6
+    function: 12
+    wait_bit: false
+    description: "Event Report Acknowledge"
+    structure:
+      - name: "ACKC6"
+        type: "BINARY"
+        description: "Acknowledge Code"
+        length: 1
+
+data_variables:
+  1:
+    name: "CLOCK"
+    type: "ASCII"
+    description: "Equipment clock time"
+    unit: "timestamp"
+
+  2:
+    name: "CONTROL_STATE"
+    type: "U1"
+    description: "Equipment control state"
+    unit: "enum"
+    values:
+      1: "ONLINE_LOCAL"
+      2: "ONLINE_REMOTE"
+      3: "OFFLINE"
+
+  3:
+    name: "PROCESSING_STATE"
+    type: "U1"
+    description: "Processing state"
+    unit: "enum"
+    values:
+      1: "IDLE"
+      2: "SETUP"
+      3: "EXECUTING"
+      4: "PAUSED"
+
+  # Etch-specific process parameters
+  100:
+    name: "CHAMBER_PRESSURE"
+    type: "F4"
+    description: "Process chamber pressure"
+    unit: "mTorr"
+    min: 0.0
+    max: 500.0
+
+  101:
+    name: "RF_TOP_POWER"
+    type: "F4"
+    description: "Top RF source power"
+    unit: "Watts"
+    min: 0.0
+    max: 3000.0
+
+  102:
+    name: "RF_BOTTOM_POWER"
+    type: "F4"
+    description: "Bottom RF bias power"
+    unit: "Watts"
+    min: 0.0
+    max: 2000.0
+
+  103:
+    name: "HELIUM_FLOW"
+    type: "F4"
+    description: "Helium backside cooling flow"
+    unit: "sccm"
+    min: 0.0
+    max: 100.0
+
+  104:
+    name: "ETCH_GAS_FLOW"
+    type: "F4"
+    description: "Etch gas flow rate"
+    unit: "sccm"
+    min: 0.0
+    max: 500.0
+
+  105:
+    name: "ETCH_RATE"
+    type: "F4"
+    description: "Etch rate"
+    unit: "Å/min"
+    min: 0.0
+    max: 5000.0
+
+  106:
+    name: "ELECTRODE_TEMP"
+    type: "F4"
+    description: "Electrode temperature"
+    unit: "Celsius"
+    min: -20.0
+    max: 100.0
+
+  107:
+    name: "WALL_TEMP"
+    type: "F4"
+    description: "Chamber wall temperature"
+    unit: "Celsius"
+    min: 20.0
+    max: 150.0
+
+  108:
+    name: "ESC_VOLTAGE"
+    type: "F4"
+    description: "Electrostatic chuck voltage"
+    unit: "Volts"
+    min: -2000.0
+    max: 2000.0
+
+collection_events:
+  1:
+    name: "EQUIPMENT_STATUS_CHANGE"
+    description: "Equipment status changed"
+    associated_reports: [1, 2]
+
+  100:
+    name: "PROCESS_START"
+    description: "Etch process started"
+    associated_reports: [10, 11]
+
+  101:
+    name: "PROCESS_COMPLETE"
+    description: "Etch process completed"
+    associated_reports: [10, 11, 12]
+
+  102:
+    name: "WAFER_LOAD"
+    description: "Wafer loaded into chamber"
+    associated_reports: [1, 10]
+
+  103:
+    name: "WAFER_UNLOAD"
+    description: "Wafer unloaded from chamber"
+    associated_reports: [1, 10]
+
+  104:
+    name: "ENDPOINT_DETECTED"
+    description: "Etch endpoint detected"
+    associated_reports: [10, 12]
+
+  200:
+    name: "ALARM_TRIGGERED"
+    description: "Alarm condition detected"
+    associated_reports: [20, 21]
+
+  201:
+    name: "RF_POWER_ALARM"
+    description: "RF power out of spec"
+    associated_reports: [20, 21]
+
+  202:
+    name: "PRESSURE_ALARM"
+    description: "Chamber pressure alarm"
+    associated_reports: [20, 21]
+
+  203:
+    name: "TEMPERATURE_ALARM"
+    description: "Temperature out of spec"
+    associated_reports: [20, 21]
+
+reports:
+  1:
+    name: "EQUIPMENT_STATUS"
+    description: "Equipment status data"
+    variables: [1, 2, 3]
+
+  10:
+    name: "PROCESS_PARAMETERS"
+    description: "Current process parameters"
+    variables: [100, 101, 102, 103, 104, 105, 106, 107, 108]
+
+  11:
+    name: "ETCH_DATA"
+    description: "Etch-specific data"
+    variables: [105]
+
+  12:
+    name: "ENDPOINT_DATA"
+    description: "Endpoint detection data"
+    variables: [105]
+
+  20:
+    name: "ALARM_REPORT"
+    description: "Alarm information"
+    variables: [1, 2]
+
+  21:
+    name: "ALARM_DETAILS"
+    description: "Detailed alarm data"
+    variables: [100, 101, 102, 106, 107]
+
+commands:
+  START_ETCH:
+    description: "Start etch process"
+    parameters:
+      - name: "RECIPE_ID"
+        type: "ASCII"
+        required: true
+      - name: "LOT_ID"
+        type: "ASCII"
+        required: true
+      - name: "WAFER_ID"
+        type: "ASCII"
+        required: true
+
+  STOP_ETCH:
+    description: "Stop etch process"
+    parameters: []
+
+  PAUSE_PROCESS:
+    description: "Pause current process"
+    parameters: []
+
+  RESUME_PROCESS:
+    description: "Resume paused process"
+    parameters: []
+
+  CONDITION_CHAMBER:
+    description: "Run chamber conditioning"
+    parameters:
+      - name: "CONDITION_TIME"
+        type: "U4"
+        required: true
+
+  CLEAN_CHAMBER:
+    description: "Run chamber clean process"
+    parameters:
+      - name: "CLEAN_RECIPE"
+        type: "ASCII"
+        required: true
+
+  ABORT_PROCESS:
+    description: "Abort current process"
+    parameters:
+      - name: "ABORT_CODE"
+        type: "U1"
+        required: false
+
+settings:
+  auto_reconnect: true
+  reconnect_interval: 30
+  max_reconnect_attempts: 0
+  heartbeat_enabled: true
+  heartbeat_interval: 60
+  message_logging: true
+  log_file: "logs/lam_kiyo.log"
+  log_level: "INFO"
+  secs_trace: true
+
+advanced:
+  max_queue_size: 1000
+  message_cache_enabled: true
+  message_cache_ttl: 300
+  metrics_enabled: true
+  metrics_interval: 60

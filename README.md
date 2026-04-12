@@ -156,9 +156,28 @@ The library is designed as a standalone protocol layer. It can be used directly 
 
 ## About
 
-Developed and maintained by [MST Semiconductor Technology](https://ai-mst.com) - building AI-powered semiconductor manufacturing solutions.
+Developed and maintained by [Moore Solution Technology (MST)](https://mst-sg.com) — AI infrastructure for semiconductor manufacturing.
 
-This driver powers the communication layer of the [NeuroBox E series](https://ai-mst.com/neurobox-e3200) edge AI platform for semiconductor fabs and equipment manufacturers.
+This driver powers the communication layer of the [NeuroBox E series](https://mst-sg.com/news/neurobox-e3200-production-ai/) edge AI platform for semiconductor fabs and equipment manufacturers.
+
+### MST Product Ecosystem
+
+| Product | Description | Learn More |
+|---------|-------------|------------|
+| **NeuroBox D** | AI design automation — P&ID to native SolidWorks 3D assembly | [Product Page](https://mst-sg.com/neurobox-d/) |
+| **NeuroBox E5200** | Smart DOE for equipment commissioning — 80% fewer test wafers | [How Smart DOE Works](https://mst-sg.com/stop-burning-test-wafers-how-smart-doe-cuts-equipment-commissioning-costs-by-80/) |
+| **NeuroBox E3200** | Production-line AI — Virtual Metrology, R2R, FDC at sub-50ms | [VM Explained](https://mst-sg.com/virtual-metrology-explained-how-ai-predicts-wafer-quality-without-physical-measurement/) |
+| **NeuroEnergy** | AI energy management for semiconductor fabs | [Learn More](https://mst-sg.com/news/neuroenergy-launch/) |
+
+### Related Resources
+
+- [The Complete Guide to SECS/GEM Protocol](https://mst-sg.com/the-complete-guide-to-secs-gem-protocol-for-semiconductor-equipment/)
+- [SECS/GEM vs OPC UA Comparison](https://mst-sg.com/secs-gem-vs-opc-ua-which-communication-protocol-is-right-for-your-smart-fab/)
+- [GEM300 Standard Guide](https://mst-sg.com/gem300-standard-300mm-semiconductor-equipment-guide/)
+- [Run-to-Run Control with AI](https://mst-sg.com/run-to-run-control-the-ai-system-that-automatically-tunes-every-wafer/)
+- [FDC: AI Reduces False Alarms by 70%](https://mst-sg.com/fdc-fault-detection-and-classification-how-ai-reduces-false-alarms-by-70/)
+
+**Websites**: [mst-sg.com](https://mst-sg.com) (Global) | [ai-mst.com](https://ai-mst.com) (中国站)
 
 ## License
 

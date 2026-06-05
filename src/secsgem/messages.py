@@ -486,7 +486,7 @@ if __name__ == "__main__":
     # Import config loader
     from .config import ConfigLoader
 
-    # Load AMAT config
+    # Load generic config
     loader = ConfigLoader()
     config_path = str(project_root / "configs" / "amat_centura.yaml")
 

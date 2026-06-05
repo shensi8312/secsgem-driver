@@ -1,0 +1,130 @@
+# Generic legacy interface -> SECS/GEM evaluation config.
+# This is an example for learning and scoping only. It does not imply support
+# for any specific equipment vendor, customer, or production deployment.
+
+equipment:
+  id: "LEGACY_TOOL_001"
+  type: "GENERIC_LEGACY_TOOL"
+  description: "Generic legacy equipment with simple ASCII telemetry"
+  location: "LAB-BENCH-01"
+  vendor: "GENERIC_VENDOR"
+
+connection:
+  mode: "active"
+  ip_address: "127.0.0.1"
+  port: 5000
+  connect_timeout: 5
+  reply_timeout: 5
+  t3_timeout: 30
+  t5_timeout: 10
+  t6_timeout: 5
+  t7_timeout: 10
+  t8_timeout: 5
+  device_id: 0
+  session_id: 0
+
+messages:
+  S1F1:
+    stream: 1
+    function: 1
+    wait_bit: true
+    description: "Are You There Request"
+    structure: null
+
+  S1F2:
+    stream: 1
+    function: 2
+    wait_bit: false
+    description: "Are You There Response"
+    structure:
+      - name: "MDLN"
+        type: "ASCII"
+        description: "Model Name"
+      - name: "SOFTREV"
+        type: "ASCII"
+        description: "Software Revision"
+
+  S1F13:
+    stream: 1
+    function: 13
+    wait_bit: true
+    description: "Establish Communications Request"
+    structure: null
+
+  S1F14:
+    stream: 1
+    function: 14
+    wait_bit: false
+    description: "Establish Communications Acknowledge"
+    structure:
+      - name: "COMMACK"
+        type: "BINARY"
+        description: "Establish Communications Acknowledge Code"
+      - name: "MDLN"
+        type: "LIST"
+        description: "Equipment Model and Software Data"
+
+  S6F11:
+    stream: 6
+    function: 11
+    wait_bit: false
+    description: "Event Report"
+    structure:
+      - name: "DATAID"
+        type: "U4"
+        description: "Data ID"
+      - name: "CEID"
+        type: "U4"
+        description: "Collection Event ID"
+      - name: "RPT"
+        type: "LIST"
+        description: "Reports"
+
+data_variables:
+  1001:
+    name: "TEMPERATURE"
+    type: "F4"
+    description: "Parsed legacy temperature value"
+    unit: "Celsius"
+  1002:
+    name: "PRESSURE"
+    type: "F4"
+    description: "Parsed legacy pressure value"
+    unit: "Torr"
+  1003:
+    name: "STATE"
+    type: "ASCII"
+    description: "Parsed legacy state string"
+    unit: "enum"
+
+collection_events:
+  2001:
+    name: "LEGACY_STATUS_UPDATE"
+    description: "Parsed legacy status line"
+    associated_reports: [3001]
+
+reports:
+  3001:
+    name: "LEGACY_STATUS_REPORT"
+    description: "Mapped status variables from a legacy line"
+    variables: [1001, 1002, 1003]
+
+commands: {}
+
+settings:
+  auto_reconnect: false
+  reconnect_interval: 30
+  max_reconnect_attempts: 0
+  heartbeat_enabled: false
+  heartbeat_interval: 60
+  message_logging: true
+  log_file: "logs/legacy_gateway.log"
+  log_level: "INFO"
+  secs_trace: true
+
+advanced:
+  max_queue_size: 1000
+  message_cache_enabled: false
+  message_cache_ttl: 0
+  metrics_enabled: false
+  metrics_interval: 60

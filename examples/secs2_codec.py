@@ -28,7 +28,7 @@ def main():
     for label, value in [
         ("Integer 42", 42),
         ("Float 3.14", 3.14),
-        ("String 'AMAT'", "AMAT"),
+        ("String 'GENERIC'", "GENERIC"),
         ("Boolean True", True),
         ("Binary", b"\x01\x02\x03"),
     ]:
@@ -38,7 +38,7 @@ def main():
 
     # 2. List (nested structure)
     print("\n--- List Encoding ---")
-    data = ["MDLN", "Centura 5200", "SOFTREV", "1.2.3"]
+    data = ["MDLN", "Generic Model", "SOFTREV", "1.2.3"]
     encoded = encode(data)
     decoded_val, _ = decode(encoded)
     print(f"  Input:   {data}")

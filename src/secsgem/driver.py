@@ -256,7 +256,7 @@ class SecsGemDriver:
 
         Examples:
             >>> await driver.send("S1F1")
-            {'MDLN': 'AMAT Centura', 'SOFTREV': '1.2.3'}
+            {'MDLN': 'Generic Tool', 'SOFTREV': '1.2.3'}
 
             >>> await driver.send("S2F41", {
             ...     "RCMD": "START",

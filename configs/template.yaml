@@ -12,7 +12,7 @@ equipment:
   # Equipment identifier (used in logs and system identification)
   id: "EQUIPMENT_001"
 
-  # Equipment type/model (e.g., AMAT_CENTURA, LAM_KIYO, TEL_LITHIUS)
+  # Equipment type/model (generic example only)
   type: "GENERIC_TOOL"
 
   # Equipment description

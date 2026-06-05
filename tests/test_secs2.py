@@ -38,7 +38,7 @@ class TestEncodeDecode:
         assert abs(decoded - value) < 0.01
 
     def test_string(self):
-        value = "AMAT Centura"
+        value = "Generic Tool"
         encoded = encode(value)
         decoded, consumed = decode(encoded)
         assert decoded == value
@@ -170,7 +170,7 @@ class TestEdgeCases:
 
     def test_message_key_value(self):
         """Test alternating key-value list pattern used in SECS messages."""
-        value = ["MDLN", "AMAT", "SOFTREV", "1.0"]
+        value = ["MDLN", "GENERIC", "SOFTREV", "1.0"]
         encoded = encode(value)
         decoded, _ = decode(encoded)
         assert decoded == value

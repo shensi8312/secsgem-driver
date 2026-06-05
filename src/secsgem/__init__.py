@@ -1,15 +1,8 @@
 """
-SECS/GEM Driver
-===============
+Early SECS/GEM prototyping resources.
 
-Configuration-driven SECS/GEM driver for semiconductor equipment communication.
-
-Modules:
-    hsms: HSMS protocol implementation (SEMI E37)
-    secs2: SECS-II codec (SEMI E5)
-    config: Equipment configuration loader
-    messages: Message builder
-    driver: High-level driver API
+This package is for learning, simulator work, and integration evaluation. It is
+not a production-certified SECS/GEM or GEM300 solution.
 """
 
 from .hsms import (
@@ -36,19 +29,13 @@ from .config import (
 from .messages import MessageBuilder
 from .driver import SecsGemDriver
 
-__version__ = "1.0.0"
+__version__ = "0.1.0"
 
 __all__ = [
-    # HSMS
-    'HSMSConnection', 'HSMSHeader', 'HSMSMessageType',
-    'HSMSSelectStatus', 'HSMSDeselectStatus', 'HSMSRejectReason',
-    # SECS-II
-    'encode', 'decode', 'encode_message', 'decode_message',
-    'Secs2Item', 'FormatCode', 'format_bytes',
-    # Config
-    'ConfigLoader', 'EquipmentConfiguration',
-    # Messages
-    'MessageBuilder',
-    # Driver
-    'SecsGemDriver',
+    "HSMSConnection", "HSMSHeader", "HSMSMessageType",
+    "HSMSSelectStatus", "HSMSDeselectStatus", "HSMSRejectReason",
+    "encode", "decode", "encode_message", "decode_message",
+    "Secs2Item", "FormatCode", "format_bytes",
+    "ConfigLoader", "EquipmentConfiguration",
+    "MessageBuilder", "SecsGemDriver",
 ]

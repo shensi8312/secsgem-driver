@@ -501,7 +501,7 @@ def encode_message(data: dict) -> bytes:
         SECS-II encoded bytes
 
     Example:
-        >>> msg = {"MDLN": "AMAT", "SOFTREV": "1.2.3"}
+        >>> msg = {"MDLN": "GENERIC", "SOFTREV": "1.2.3"}
         >>> encoded = encode_message(msg)
     """
     # Convert dict to list format
@@ -529,7 +529,7 @@ def decode_message(data: bytes) -> dict:
         >>> data = b'...'  # SECS-II encoded
         >>> msg = decode_message(data)
         >>> print(msg)
-        {'MDLN': 'AMAT', 'SOFTREV': '1.2.3'}
+        {'MDLN': 'GENERIC', 'SOFTREV': '1.2.3'}
     """
     items, _ = decode(data)
 
@@ -607,7 +607,7 @@ if __name__ == "__main__":
     # Example 4: Nested structure
     print("\n4. Nested structure:")
     nested = {
-        "MDLN": "AMAT Centura",
+        "MDLN": "Generic Tool",
         "SOFTREV": "1.2.3",
         "PARAMS": [
             {"TEMP": 650.5},
@@ -616,7 +616,7 @@ if __name__ == "__main__":
     }
     # Convert to list format
     msg_list = [
-        "MDLN", "AMAT Centura",
+        "MDLN", "Generic Tool",
         "SOFTREV", "1.2.3",
         "PARAMS", [
             ["TEMP", 650.5],

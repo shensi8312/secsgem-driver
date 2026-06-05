@@ -1,0 +1,25 @@
+secsgem-driver local demo
+Status: early / v0 / integration-evaluation only
+This demo uses generic simulated equipment. No production compliance is claimed.
+
+legacy equipment -> gateway: TEMP=42.5;PRESSURE=1.2;STATE=IDLE;COUNT=17
+host remote command -> legacy equipment: CMD=START;RECIPE=DEMO
+
+[1/5] host establishes communication
+  reply: S1F14 COMMACK=0 MDLN=MST-DEMO-GATEWAY SOFTREV=0.1.0
+  encoded: 0000  01 03 A5 01 00 41 10 4D 53 54 2D 44 45 4D 4F 2D   .....A.MST-DEMO- 0010  47 41 54 45 57 41 59 41 05 30 2E 31 2E 30         GATEWAYA.0.1.0
+[2/5] host reads status variables
+  reply: S1F4 TEMP=42.5C PRESSURE=1.2Torr STATE=IDLE COUNT=17
+  encoded: 0000  01 04 01 02 A9 02 03 E9 91 04 42 2A 00 00 01 02   ..........B*.... 0010  A9 02 03 EA 91 04 3F 99 99 9A 01 02 A9 02 03 EB   ......?......... 0020  41 04 49 44 4C 45 01 02 A9 02 03 EC A5 01 11      A.IDLE.........
+[3/5] equipment raises an alarm
+  reply: S5F1 ALCD=1 ALID=5001 ALTX=Demo door interlock alarm
+  encoded: 0000  01 03 A5 01 01 A9 02 13 89 41 19 44 65 6D 6F 20   .........A.Demo  0010  64 6F 6F 72 20 69 6E 74 65 72 6C 6F 63 6B 20 61   door interlock a 0020  6C 61 72 6D                                       larm
+[4/5] host sends a remote command
+  reply: S2F42 RCMD=START HCACK=0
+  encoded: 0000  01 03 41 05 53 54 41 52 54 A5 01 00 01 00         ..A.START.....
+[5/5] equipment sends an event report
+  reply: S6F11 CEID=2001 RPTID=3001
+  encoded: 0000  01 03 A5 01 01 A9 02 07 D1 01 01 01 02 A9 02 0B   ................ 0010  B9 01 04 01 02 A9 02 03 E9 91 04 42 2A 00 00 01   ...........B*... 0020  02 A9 02 03 EA 91 04 3F 99 99 9A 01 02 A9 02 03   .......?........ 0030  EB 41 04 49 44 4C 45 01 02 A9 02 03 EC A5 01 11   .A.IDLE.........
+
+Done: 5 starter GEM E30-style scenarios completed locally.
+Next step for production: equipment-specific mapping, validation, and customer acceptance testing.

@@ -29,10 +29,13 @@ expectations, validation plan, and acceptance criteria.
 
 ## Built on
 
-This project uses the established open-source SECS/GEM ecosystem concepts and
-keeps the demo intentionally small. It does not claim to reimplement a complete
-commercial SECS/GEM stack. The value here is the bridge, mapping, simulator, and
-scoping examples.
+The runnable demo uses the minimal SECS-II / HSMS learning code included in this
+repo so it can run locally without external equipment or a production SDK. It is
+not a complete commercial SECS/GEM stack. Production integration can build on an
+established open-source SECS/GEM package, a commercial SDK, or a customer-chosen
+host path after equipment-specific validation.
+
+The value here is the bridge, mapping, simulator, and scoping examples.
 
 License: Apache-2.0.
 
